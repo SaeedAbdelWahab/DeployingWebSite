@@ -3,6 +3,7 @@
 ### port 2200
 ### IP address http://99.79.75.159/
 ### Username grader
+### Public key location /home/grader/.ssh/authorized_keys
 
 ## Step 1 After configuring the instance to ssh using the instructions given, Update all the packages using these 2 commands 
 
