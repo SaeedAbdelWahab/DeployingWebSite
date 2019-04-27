@@ -64,7 +64,7 @@ $ssh grader@INSTANCE_IP -p 2200 -i ~/.ssh/FILENAME
 ```
 with replacing instance ip by the server ip and the file name with the public key on your local machine.
 
-## Step 7 configure the time zone
+## Step 7 Configure the time zone
 
 Run the command 
 
@@ -75,19 +75,44 @@ And go with the menu to change to the wanted timezone (UTC chosen in this projec
 
 ## Step 8 Install and configure Apache to serve a Python mod_wsgi application
 
+```ssh
+$sudo apt-get install apache2 
+$sudo apt-get install libapache2-mod-wsgi python-dev
+$sudo a2enmod wsgi
+$sudo service apache2 start
+```
 
+## Step 9 Install and configure PostgreSQL
+```ssh
+$sudo apt-get install postgresql
+```
+To make sure that remote connections are disabled check this file `/etc/postgresql/9.5/main/pg_hba.conf`
 
+To configure the catalog user, create the DB and configure it run the following commands
 
-7 - run "sudo dpkg-reconfigure tzdata", select none of the above then choose UTC time zone to change the time to UTC
-
-8 - Install apache using the command "sudo apt-get install apache2"
-
-9 - Install wsgi using the command "sudo apt-get install libapache2-mod-wsgi"
-
+```ssh
+$sudo su - postgres
+psql​
+106
+​
+107
 10 - Add the following line "WSGIScriptAlias / /var/www/html/myapp.wsgi" just before closing thee tag "<VirtualHost *:80>"
+108
 in the file "/etc/apache2/sites-enabled/000-default.conf" then restart the apache server "sudo apache2ctl restart"
-
+109
+​
+110
 11 - install postgresSql
+CREATE USER catalog WITH PASSWORD 'password';
+ALTER USER catalog CREATEDB;
+CREATE DATABASE catalog WITH OWNER catalog;
+\c catalog
+REVOKE ALL ON SCHEMA public FROM public;
+GRANT ALL ON SCHEMA public TO catalog;
+\q
+exit
+```
+
 
 11 - Install flask and SQLAlchemy
 
