@@ -102,22 +102,14 @@ GRANT ALL ON SCHEMA public TO catalog;
 \q
 exit
 ```
-## Step 10 Create a virtual environment and install needed libraries
-First create the virutal env
+## Step 10 Install needed libraries
+Install needed libraries
 ```ssh
-$sudo apt-get install python-pip
-$sudo pip install virtualenv
-$cd ~
-$virtualenv flaskEnv
-$source flaskEnv/bin/activate
-```
-Then install needed libraries
-```ssh
-$pip install Flask
-$pip install httplib2 oauth2client sqlalchemy sqlalchemy_utils
-$pip install passlib
-$pip install requests
-$pip install psycopg2
+$sudo apt-get install python-flask
+$sudo apt-get install python-sqlalchemy
+$sudo apt-get install python-psycopg2
+$sudo apt-get install python-httplib2 python-oauth2client
+$sudo apt-get install python-requests
 ```
 ## Step 11 Install Git and clone the ItemCatalog repo
 
@@ -137,10 +129,77 @@ $git checkout psqlImplementation
 ```
 The last checkout switched to branch which uses psql database instead of sqlite
 
+## Step 12 Configure the server to run the website
 
+First edit the file `/etc/apache2/sites-available/ItemCatalog.conf`
+by running the command 
+```ssh
+$sudo nano /etc/apache2/sites-available/ItemCatalog.conf
+```
+And then paste this in it
+```ssh
+<VirtualHost *:80>
+    ServerName 99.79.75.159
+    ServerAdmin admin@mywebsite.com
+    WSGIScriptAlias / /var/www/ItemCatalog/ItemCatalog.wsgi
+    <Directory /var/www/ItemCatalog/ItemCatalog>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    <Directory /var/www/ItemCatalog/ItemCatalog/static/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+After that run this command 
+```ssh
+$sudo nano /var/www/ItemCatalog/ItemCatalog.wsgi  
+```
+And paste this in it 
+```ssh
+#! /usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/ItemCatalog/ItemCatalog/")
 
+# home points to the home.py file
+from main import app as application
+application.secret_key = "somesecretsessionkey"
+```
+Then run this commands to create coloumns in the DB and populate it
+```ssh
+$python database.py
+$python populateDB.py
+```
+Finally edit the line 
+```ssh
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web'
+                                                                ]['client_id']
 
+```
+into 
+```ssh
+CLIENT_ID = json.loads(open('/var/www/ItemCatalog/ItemCatalog/client_secrets.json', 'r').read())['web'
+                                                                ]['client_id']
 
-11 - Install flask and SQLAlchemy
+```
+After that run these commands 
+```ssh
+$sudo a2enmod wsgi
+$sudo apachectl restart
+$sudo a2ensite ItemCatalog
+$sudo service apache2 reload
+$sudo /etc/init.d/apache2 reload
+```
+And when Done visite the ip address of your program and hopefully the site is up !
 
-12 - 
+You can Debug errors by running
+```ssh
+$sudo nano /var/log/apache2/error.log
+```
+
