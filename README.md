@@ -5,11 +5,26 @@
 ### Username grader
 ### Public key location /home/grader/.ssh/authorized_keys
 
+## A list of installed softwares and packages
+1. The operating system of the local machine used was ubuntu which was configured so no extra software had to be installed
+2. On the server the installed software and packages were :
+* apache2 
+* libapache2-mod-wsgi python-dev
+* postgresql
+* python-flask
+* python-sqlalchemy
+* python-psycopg2
+* python-httplib2 python-oauth2client
+* python-requests
+* Git
+
+
 ## Step 1 After configuring the instance to ssh using the instructions given, Update all the packages using these 2 commands 
 
 ```ssh
 $sudo apt-get update
 $sudo apt-get upgrade
+$sudo apt-get update && sudo apt-get dist-upgrade
 ````
 
 ## Step 2 Change the default ssh port to 2200 instead of 22
@@ -210,4 +225,10 @@ You can Debug errors by running
 ```ssh
 $sudo nano /var/log/apache2/error.log
 ```
+
+## Third pary resources
+1. http://amunategui.github.io/idea-to-pitch/ helped in undertanding the flow of deploying a flask app online
+2. https://www.howtoforge.com/tutorial/ufw-uncomplicated-firewall-on-ubuntu-15-04/ for ufw deeper understanding
+3. https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line for psql reference
+4. https://davidegan.me/hide-git-repos-on-public-sites/ to hide the .git file
 
