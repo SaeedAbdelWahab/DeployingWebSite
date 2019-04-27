@@ -1,13 +1,13 @@
 # DeployingWebSite
 
-## Step 1 after configuring the instance to ssh using the instructions given, update all the packages using these 2 commands 
+## Step 1 After configuring the instance to ssh using the instructions given, Update all the packages using these 2 commands 
 
 ```ssh
 $sudo apt-get update
 $sudo apt-get upgrade
 ````
 
-## Step 2 change the default ssh port to 2200 instead of 22
+## Step 2 Change the default ssh port to 2200 instead of 22
 That is done by three steps. First edit the sshd config file by running the command `$sudo nano /etc/ssh/sshd_config` and change the default port to 2200 instead of 22. The second step is to *change the firewall settings from the lightsail website by adding a custom port besides the two ports of SSH and HTTP to listen on port 2200 and be tcp*. And finally run the command `$sudo service sshd restart`.
 
 ## Step 3 Configure the firewall
@@ -24,14 +24,14 @@ $sudo ufw enable
 
 You can run the command `$sudo ufw status` to determine the state of the ufw before and after running these commands. **Note** that you have to configure your ssh from your local machine terminal since the terminal provided by the website will be blocked out since it is sshing on port 22
 
-## Step 4 adding the grader user
+## Step 4 Add the grader user
 You can add the grader user by running the command 
 
 ```ssh
 $sudo adduser grader
 ```
 
-## Step 5 add sudo persmission to grader
+## Step 5 Add sudo persmission to grader
 that is dony by running the command 
 
 ```ssh
@@ -44,14 +44,39 @@ and replace the `ubuntu ALL=(ALL) NOPASSWD:ALL` with `grader ALL=(ALL) NOPASSWD:
 On your local machine run the command 
 
 ```ssh
-$keygen-ssh
+$ssh-keygen
 ```
+And on the server, switch to grader user and then change directory to his home by running the comand `cd ~`.
+After that run these two commands
+```ssh
+$mkdir .ssh
+$touch .ssh/authorized_keys
+```
+Then copy the contents of the public key created on your local server from the ssh-keygen step `filename.pub` and paste these contents on the server in the `.ssh/authorized_keys` file.
+After that change the permissions of the .ssh and the authorized_keys by running the commands
+```ssh
+$chmod 700 .ssh
+$chmod 644 .ssh/authorized_keys
+```
+After this step you should be able to ssh your server using the command 
+```ssh
+$ssh grader@INSTANCE_IP -p 2200 -i ~/.ssh/FILENAME
+```
+with replacing instance ip by the server ip and the file name with the public key on your local machine.
+
+## Step 7 configure the time zone
+
+Run the command 
+
+```ssh
+$sudo dpkg-reconfigure tzdata
+```
+And go with the menu to change to the wanted timezone (UTC chosen in this project)
+
+## Step 8 Install and configure Apache to serve a Python mod_wsgi application
 
 
 
-
-
-6 - use ssh-keygen on my laptop to generate the public and private keys, then copy the public and place it on the server. Also change the permission of the .ssh directory created on the server to 700 while the authorized_keys files in that directory to 644
 
 7 - run "sudo dpkg-reconfigure tzdata", select none of the above then choose UTC time zone to change the time to UTC
 
