@@ -1,6 +1,14 @@
 # DeployingWebSite
 
-The steps till now conducted
+## Step 1 after configuring the instance to ssh using the instructions given, update all the packages using these 2 commands 
+
+```ssh
+$sudo apt-get update
+$sudo apt-get upgrade
+````
+
+## Step 2 change the default ssh port to 2200 instead of 22
+That is done by three steps. First edit the sshd config file by running the command `$sudo nano /etc/ssh/sshd_config` and change the default port to 2200 instead of 22. The second step is to *change the firewall settings from the lightsail website by adding a custom port besides the two ports of SSH and HTTP to listen on port 2200 and be tcp*. And finally run the command `$sudo service sshd restart`.
 
 1 - update all the software using "sudo apt-get update" then "sudo apt-get upgrade on server"
 
