@@ -92,17 +92,7 @@ To configure the catalog user, create the DB and configure it run the following 
 
 ```ssh
 $sudo su - postgres
-psql​
-106
-​
-107
-10 - Add the following line "WSGIScriptAlias / /var/www/html/myapp.wsgi" just before closing thee tag "<VirtualHost *:80>"
-108
-in the file "/etc/apache2/sites-enabled/000-default.conf" then restart the apache server "sudo apache2ctl restart"
-109
-​
-110
-11 - install postgresSql
+psql
 CREATE USER catalog WITH PASSWORD 'password';
 ALTER USER catalog CREATEDB;
 CREATE DATABASE catalog WITH OWNER catalog;
@@ -112,6 +102,43 @@ GRANT ALL ON SCHEMA public TO catalog;
 \q
 exit
 ```
+## Step 10 Create a virtual environment and install needed libraries
+First create the virutal env
+```ssh
+$sudo apt-get install python-pip
+$sudo pip install virtualenv
+$cd ~
+$virtualenv flaskEnv
+$source flaskEnv/bin/activate
+```
+Then install needed libraries
+```ssh
+$pip install Flask
+$pip install httplib2 oauth2client sqlalchemy sqlalchemy_utils
+$pip install passlib
+$pip install requests
+$pip install psycopg2
+```
+## Step 11 Install Git and clone the ItemCatalog repo
+
+To install git 
+
+```ssh
+$sudo apt-get install git
+```
+To clone the repo 
+```ssh
+$cd /var/www
+$mkdir ItemCatalog
+$cd ItemCatalog
+$git clone https://github.com/SaeedAbdelWahab/ItemCatalog.git
+$cd ItemCatalog
+$git checkout psqlImplementation
+```
+The last checkout switched to branch which uses psql database instead of sqlite
+
+
+
 
 
 11 - Install flask and SQLAlchemy
