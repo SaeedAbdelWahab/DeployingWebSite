@@ -31,7 +31,7 @@ You can add the grader user by running the command
 $sudo adduser grader
 ```
 
-## Step 5 Add sudo persmission to grader
+## Step 5 Add sudo persmission to grader and disable root login
 that is dony by running the command 
 
 ```ssh
@@ -39,6 +39,9 @@ $sudo cp /etc/sudoers.d/90-cloud-init-users /etc/sudoers.d/grader
 $sudo nano /etc/sudoers.d/grader
 ```
 and replace the `ubuntu ALL=(ALL) NOPASSWD:ALL` with `grader ALL=(ALL) NOPASSWD:ALL`
+
+Change the following line in the file `/etc/ssh/sshd_conf`
+from `PermitRootLogin prohibit-password` to `PermitRootLogin no`
 
 ## Step 6 Create an SSH key pair for grader 
 On your local machine run the command 
